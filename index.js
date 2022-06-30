@@ -30,6 +30,12 @@ async function run() {
             res.send(bills);
         })
 
+        app.post('/add_billing', async(req, res)=>{
+            const bill = req.body;
+            const result = await billingCollection.insertOne(bill);
+            res.send(result);
+        })
+
     } finally {
         // Ensures that the client will close when you finish/error
         //   await client.close();
