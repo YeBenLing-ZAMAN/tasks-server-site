@@ -3,7 +3,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
@@ -30,11 +30,36 @@ async function run() {
             res.send(bills);
         })
 
-        app.post('/add_billing', async(req, res)=>{
+        app.get('/billing_list/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const bill = await billingCollection.findOne(filter);
+            // console.log(bill);
+            res.send(bill);
+          })
+
+        app.post('/add_billing', async (req, res) => {
             const bill = req.body;
             const result = await billingCollection.insertOne(bill);
             res.send(result);
         })
+
+        app.patch('/update_billing/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateBillInfo = req.body;
+            // console.log(updateBillInfo);
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+              $set: {
+                full_name: updateBillInfo.name,
+                email:updateBillInfo.email,
+                paid_amount:updateBillInfo.amount,
+                phone:updateBillInfo.phone
+              }
+            }
+            const result = await billingCollection.updateOne(filter, updateDoc);
+            res.send(result);
+          })
 
         app.delete('/deletebilling/:id', async (req, res) => {
             const id = req.params.id;
@@ -42,7 +67,7 @@ async function run() {
             // console.log(filter);
             const result = await billingCollection.deleteOne(filter);
             res.send(result);
-          })
+        })
 
     } finally {
         // Ensures that the client will close when you finish/error
