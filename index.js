@@ -22,6 +22,7 @@ async function run() {
     try {
         await client.connect();
         const billingCollection = client.db("jobs_tasks").collection("billing_info");
+        const userCollection = client.db("jobs_tasks").collection("user_info");
 
 
         /* routes */
@@ -68,6 +69,27 @@ async function run() {
             const result = await billingCollection.deleteOne(filter);
             res.send(result);
         })
+
+        /* authencation routes */
+        app.post('/registration', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
+
+        // app.put('/registration', async (req, res) => {
+        //     const user = req.body;
+        //     const filter = {email:user.email};
+        //     const updateDoc = {
+        //         $set: { password: user.password,
+        //                 email:user.email
+        //         },
+        //       };
+        //     console.log(user);
+        //     const result = await userCollection.updateOne(filter, updateDoc);
+        //     res.send(result);
+        // })
 
     } finally {
         // Ensures that the client will close when you finish/error
