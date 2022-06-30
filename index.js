@@ -3,7 +3,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const port = process.env.PORT || 5000;
@@ -35,6 +35,14 @@ async function run() {
             const result = await billingCollection.insertOne(bill);
             res.send(result);
         })
+
+        app.delete('/deletebilling/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            // console.log(filter);
+            const result = await billingCollection.deleteOne(filter);
+            res.send(result);
+          })
 
     } finally {
         // Ensures that the client will close when you finish/error
