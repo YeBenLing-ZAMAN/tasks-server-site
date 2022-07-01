@@ -93,10 +93,19 @@ async function run() {
         /* authencation routes */
         app.post('/registration', async (req, res) => {
             const user = req.body;
-            console.log(user);
+            // console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         })
+
+        app.get('/login/:email', async (req, res) => {
+            const email = req.params.email;
+            // console.log(email);
+            const user = await userCollection.findOne({ email: email });
+            // console.log(user)
+            const isUser = user?.email === email;
+            isUser? res.send(user): res.send({ user: false });
+          })
 
         // app.put('/registration', async (req, res) => {
         //     const user = req.body;
