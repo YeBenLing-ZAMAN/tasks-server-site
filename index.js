@@ -59,13 +59,13 @@ async function run() {
             res.send(bill);
         })
 
-        app.post('/add_billing', async (req, res) => {
+        app.post('/add_billing', verifyJWT, async (req, res) => {
             const bill = req.body;
             const result = await billingCollection.insertOne(bill);
             res.send(result);
         })
 
-        app.patch('/update_billing/:id', async (req, res) => {
+        app.patch('/update_billing/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const updateBillInfo = req.body;
             // console.log(updateBillInfo);
@@ -82,7 +82,7 @@ async function run() {
             res.send(result);
         })
 
-        app.delete('/deletebilling/:id', async (req, res) => {
+        app.delete('/delete_billing/:id',verifyJWT, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
             // console.log(filter);
