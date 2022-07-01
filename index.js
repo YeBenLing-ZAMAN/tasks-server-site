@@ -107,18 +107,6 @@ async function run() {
             isUser? res.send(user): res.send({ user: false });
           })
 
-        // app.put('/registration', async (req, res) => {
-        //     const user = req.body;
-        //     const filter = {email:user.email};
-        //     const updateDoc = {
-        //         $set: { password: user.password,
-        //                 email:user.email
-        //         },
-        //       };
-        //     console.log(user);
-        //     const result = await userCollection.updateOne(filter, updateDoc);
-        //     res.send(result);
-        // })
 
         /* user token generated */
         app.put('/user/:email', async (req, res) => {
