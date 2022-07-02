@@ -70,7 +70,7 @@ async function run() {
             const id = req.params.id;
             const updateBillInfo = req.body;
             const filter = { _id: ObjectId(id) };
-            console.log(updateBillInfo);
+            // console.log(updateBillInfo);
             // res.send({data: true});
 
             const updateDoc = {
@@ -83,7 +83,6 @@ async function run() {
             }
             const result = await billingCollection.updateOne(filter, updateDoc);
             res.send(result);
-
         })
 
         app.delete('/delete_billing/:id',verifyJWT, async (req, res) => {
