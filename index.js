@@ -61,6 +61,7 @@ async function run() {
 
         app.post('/add_billing', verifyJWT, async (req, res) => {
             const bill = req.body;
+            bill.paid_amount=parseFloat(bill.paid_amount);
             const result = await billingCollection.insertOne(bill);
             res.send(result);
         })
@@ -68,18 +69,21 @@ async function run() {
         app.patch('/update_billing/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const updateBillInfo = req.body;
-            // console.log(updateBillInfo);
             const filter = { _id: ObjectId(id) };
+            console.log(updateBillInfo);
+            // res.send({data: true});
+
             const updateDoc = {
                 $set: {
-                    full_name: updateBillInfo.name,
+                    full_name: updateBillInfo.full_name,
                     email: updateBillInfo.email,
-                    paid_amount: updateBillInfo.amount,
+                    paid_amount: parseFloat(updateBillInfo.paid_amount),
                     phone: updateBillInfo.phone
                 }
             }
             const result = await billingCollection.updateOne(filter, updateDoc);
             res.send(result);
+
         })
 
         app.delete('/delete_billing/:id',verifyJWT, async (req, res) => {
@@ -118,7 +122,7 @@ async function run() {
                 $set: user,
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
             res.send({ result, token });
         })
 
